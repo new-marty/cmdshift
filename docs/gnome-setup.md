@@ -153,7 +153,4 @@ gsettings reset org.gnome.desktop.wm.keybindings switch-windows-backward
 
 ## Note on `setup-gnome.sh`
 
-These settings will be codified in a `setup-gnome.sh` script when the config is implemented. The script will:
-1. Apply all gsettings changes
-2. Verify each setting
-3. Optionally create a revert script
+All settings above are applied by `setup-gnome.sh` in the project root. The script is idempotent (safe to re-run) and supports `--revert` to restore GNOME defaults.
