@@ -56,6 +56,23 @@ These apply to all non-remote apps via the General GUI keymap.
 | Option+Shift+Left | Super+Shift+Left | (auto) | Ctrl+Shift+Left | Select Word Left |
 | Option+Shift+Right | Super+Shift+Right | (auto) | Ctrl+Shift+Right | Select Word Right |
 
+### Emacs-style Text Navigation (intentionally omitted)
+
+macOS Cocoa text fields natively support Ctrl+A/E/B/F/N/P/K/D for Emacs-style line
+navigation. These are **not** remapped here because on Linux, the Ctrl+letter combos
+conflict with standard application shortcuts:
+
+- **Ctrl+A** — Select All
+- **Ctrl+F** — Find
+- **Ctrl+N** — New Window
+- **Ctrl+P** — Print
+- **Ctrl+K** — Used by various apps (Slack: link, VS Code: chord prefix)
+- **Ctrl+B** — Bold, bookmarks
+- **Ctrl+D** — Bookmark/duplicate
+
+Use Cmd+Arrow equivalents instead: Cmd+Left/Right (Home/End) and Cmd+Up/Down
+(Ctrl+Home/Ctrl+End) for line and file navigation.
+
 ## Delete Operations
 
 ### General GUI
@@ -64,7 +81,7 @@ These apply to all non-remote apps via the General GUI keymap.
 |---|---|---|---|---|
 | Option+Backspace | Super+Backspace | `Alt-Backspace: Ctrl-Backspace` | Ctrl+Backspace | Delete Word Left |
 | Option+Delete | Super+Delete | `Alt-Delete: Ctrl-Delete` | Ctrl+Delete | Delete Word Right |
-| Cmd+Backspace | Alt+Backspace | `Super-Backspace: Ctrl-Shift-Backspace` | Ctrl+Shift+Backspace | Delete Line Left |
+| Cmd+Backspace | Alt+Backspace | `Super-Backspace: [Shift-Home, Backspace]` | (sequence) | Delete Line Left |
 | Cmd+Delete | Alt+Delete | `Super-Delete: [Shift-End, Delete]` | (sequence) | Delete Line Right |
 
 ### Terminal-specific
@@ -95,6 +112,7 @@ These apply to all non-remote apps via the General GUI keymap.
 | Cmd+Option+Right | Alt+Super+Right | `Super-Alt-Right: Ctrl-Page_Down` | Ctrl+PgDn | Next Tab (browsers) |
 | Cmd+Shift+T | Alt+Shift+T | (auto) | Ctrl+Shift+T | Reopen Closed Tab |
 | Ctrl+Tab | Ctrl+Tab | (terminals only) `Ctrl-Tab: Ctrl-Page_Down` | Ctrl+PgDn | Next Tab (terminal) |
+| Ctrl+Shift+Tab | Ctrl+Shift+Tab | (terminals only) `Ctrl-Shift-Tab: Ctrl-Page_Up` | Ctrl+PgUp | Previous Tab (terminal) |
 
 ## Terminal-Specific
 

@@ -47,6 +47,11 @@ else
     if command -v cargo &>/dev/null; then
         echo "Installing xremap via cargo (with GNOME support)..."
         cargo install xremap --features gnome
+        # Ensure xremap is available at ~/.local/bin (service expects this path)
+        mkdir -p "$HOME/.local/bin"
+        if [[ ! -e "$HOME/.local/bin/xremap" ]] && [[ -x "$HOME/.cargo/bin/xremap" ]]; then
+            ln -s "$HOME/.cargo/bin/xremap" "$HOME/.local/bin/xremap"
+        fi
         ok "xremap installed via cargo"
     else
         echo "cargo not found. Installing xremap from GitHub releases..."

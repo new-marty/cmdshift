@@ -206,6 +206,7 @@ keymap:
 
       # Tab navigation (Ctrl+Tab not natively supported in most terminals)
       Ctrl-Tab: Ctrl-Page_Down
+      Ctrl-Shift-Tab: Ctrl-Page_Up
 
       # Delete operations — readline style
       Alt-Backspace: Ctrl-w          # Option+Backspace → delete word left
@@ -317,7 +318,7 @@ keymap:
       # New Folder
       Shift-Super-n: Ctrl-Shift-n
 
-      # Preferences (most file managers use Alt+E,N sequence)
+      # Preferences (GNOME menu sequence Alt+E,N — other DEs may need overrides)
       Super-comma: [Alt-e, n]
 
       # Open in new window/tab
@@ -486,6 +487,8 @@ keymap:
   - name: Cmd+Dot to Escape
     application:
       not:
+        # Entries duplicated from &terminals and &vscode anchors because YAML
+        # merge keys (<<: *anchor) can't be used inside a `not:` deny-list.
         # Exclude terminals (handled above as Ctrl+C)
         - /^alacritty$/
         - /^com\.raggesilver\.blackbox$/
@@ -562,6 +565,9 @@ keymap:
       Super-comma: Ctrl-comma        # Preferences
 
       # --- Navigation (Cmd+Arrow → Home/End/Ctrl+Home/Ctrl+End) ---
+      # Note: macOS Cocoa Ctrl+A/E/B/F/N/P/K/D Emacs bindings are intentionally
+      # omitted — on Linux these Ctrl combos conflict with standard app shortcuts
+      # (Select All, Find, New, Print, etc.). Use Cmd+Arrow equivalents instead.
       Super-Left: Home               # Shift variant (select) auto-propagates
       Super-Right: End
       Super-Up: Ctrl-Home
@@ -574,8 +580,13 @@ keymap:
       # --- Delete operations ---
       Alt-Backspace: Ctrl-Backspace   # Option+Backspace → Delete Word Left
       Alt-Delete: Ctrl-Delete         # Option+Delete → Delete Word Right
-      Super-Backspace: Ctrl-Shift-Backspace  # Cmd+Backspace → Delete Line Left
+      Super-Backspace: [Shift-Home, Backspace]  # Cmd+Backspace → Delete Line Left
       Super-Delete: [Shift-End, Delete]      # Cmd+Delete → Delete Line Right
+
+      # --- Screenshots (Cmd+Shift+3/4/5 → Print variants) ---
+      Shift-Super-3: Shift-Print         # Full screenshot
+      Shift-Super-4: Alt-Print           # Window screenshot
+      Shift-Super-5: Print               # Interactive screenshot
 
       # --- Tab navigation ---
       Shift-Super-Left_Brace: Ctrl-Page_Up    # Cmd+Shift+[ → Previous Tab
