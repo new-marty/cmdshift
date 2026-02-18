@@ -41,7 +41,7 @@ rebound at GNOME level — xremap keymap can't handle press-release behavior for
 
 ## Config File
 
-`config.yml` — xremap YAML format. Not yet created.
+`config.yml` — xremap YAML format. Contains shared anchors, modmap, and 13 keymap blocks.
 
 ## Critical Design Decisions
 
@@ -61,6 +61,13 @@ rebound at GNOME level — xremap keymap can't handle press-release behavior for
 
 Create a keymap block with `application: { only: [...] }` **BEFORE** the general block
 for that category. xremap uses first-match-wins, so specific rules must precede general ones.
+
+## Deployment Files
+
+- `config.yml` — xremap config (deployed to `~/.config/xremap/config.yml`)
+- `xremap.service` — systemd user service (deployed to `~/.config/systemd/user/`)
+- `setup-gnome.sh` — idempotent gsettings script (Layer 3); supports `--revert`
+- `install.sh` — one-time setup (installs xremap, deploys config, enables service)
 
 ## Debug Commands
 

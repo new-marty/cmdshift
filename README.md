@@ -14,18 +14,34 @@ If you switch between macOS and Linux, maintaining consistent muscle memory is p
 
 ## Quick Start
 
-> **Note:** The config file (`config.yml`) is not yet created. These are the planned steps.
+### Automated install
 
-1. Clone or copy this repository
-2. Apply GNOME system-level shortcut changes:
-   ```bash
-   # Will be codified in setup-gnome.sh
-   # See docs/gnome-setup.md for the full list of gsettings changes
-   ```
-3. Start xremap:
-   ```bash
-   xremap --watch config.yml
-   ```
+```bash
+git clone https://github.com/YOUR_USER/cmdshift.git
+cd cmdshift
+./install.sh
+```
+
+This installs xremap, deploys the config, sets up the systemd service, and applies GNOME settings. You'll need to reboot after the first run (for input group membership).
+
+### Manual install
+
+1. Install xremap with GNOME support: `cargo install xremap --features gnome`
+2. Install the [xremap GNOME Shell extension](https://extensions.gnome.org/extension/5060/xremap/)
+3. Copy the config: `mkdir -p ~/.config/xremap && cp config.yml ~/.config/xremap/`
+4. Apply GNOME settings: `./setup-gnome.sh`
+5. Run xremap: `xremap --watch=config,device ~/.config/xremap/config.yml`
+
+### Chezmoi integration
+
+Copy these files into your chezmoi source directory:
+
+| Source | Chezmoi target |
+|--------|----------------|
+| `config.yml` | `dot_config/xremap/config.yml` |
+| `xremap.service` | `dot_config/systemd/user/xremap.service` |
+| `setup-gnome.sh` | `run_onchange_setup-gnome.sh` |
+| `install.sh` | `run_once_install-xremap.sh` |
 
 ## Architecture
 

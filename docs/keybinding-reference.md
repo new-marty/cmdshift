@@ -56,21 +56,6 @@ These apply to all non-remote apps via the General GUI keymap.
 | Option+Shift+Left | Super+Shift+Left | (auto) | Ctrl+Shift+Left | Select Word Left |
 | Option+Shift+Right | Super+Shift+Right | (auto) | Ctrl+Shift+Right | Select Word Right |
 
-### Emacs-style Navigation (General GUI)
-
-| Mac Shortcut | Physical Keys | xremap Rule | App Receives | Action |
-|---|---|---|---|---|
-| Ctrl+A | Ctrl+A | `Alt-a: Home` | Home | Beginning of Line |
-| Ctrl+E | Ctrl+E | `Alt-e: End` | End | End of Line |
-| Ctrl+B | Ctrl+B | `Alt-b: Left` | Left | Back one character |
-| Ctrl+F | Ctrl+F | `Alt-f: Right` | Right | Forward one character |
-| Ctrl+N | Ctrl+N | `Alt-n: Down` | Down | Next line |
-| Ctrl+P | Ctrl+P | `Alt-p: Up` | Up | Previous line |
-| Ctrl+K | Ctrl+K | `Alt-k: [Shift-End, Backspace]` | (sequence) | Kill to end of line |
-| Ctrl+D | Ctrl+D | `Alt-d: Delete` | Delete | Delete forward |
-
-> Note: These emacs-style shortcuts use the `Super-` prefix (physical Alt = Cmd position) in xremap rules, not `Ctrl-`. On macOS, Ctrl+A/E/etc. are natively supported by Cocoa text fields. On Linux, most GTK/Qt apps don't support them natively, so we remap Cmd+A → Home, Cmd+E → End, etc. to provide equivalent line-navigation behavior. The physical Ctrl key passes through unchanged for app-specific Ctrl shortcuts.
-
 ## Delete Operations
 
 ### General GUI

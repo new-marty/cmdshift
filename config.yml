@@ -1,0 +1,582 @@
+# cmdshift — macOS-style keybindings for Linux via xremap
+# https://github.com/xremap/xremap
+#
+# Three layers:
+#   1. Modmap: Alt↔Super swap (physical Alt = Cmd, physical Super = Option)
+#   2. Keymap: ~200 combo translation rules (this file)
+#   3. GNOME gsettings: held-modifier shortcuts (see setup-gnome.sh)
+#
+# After modmap: Super- = Cmd, Alt- = Option, Ctrl- = Ctrl
+# Block order: first-match-wins per combo. Specific overrides before general.
+# exact_match: false (default) auto-propagates Shift for selection variants.
+
+# ---------------------------------------------------------------------------
+# Shared: YAML anchors for application lists (reused across keymap blocks)
+# ---------------------------------------------------------------------------
+shared:
+  terminals: &terminals
+    - /^alacritty$/
+    - /^com\.raggesilver\.blackbox$/
+    - /^com\.system76\.cosmicterm$/
+    - /^contour$/
+    - /^cutefish-terminal$/
+    - /^deepin-terminal$/
+    - /^dev\.warp\.warp$/
+    - /^eterm$/
+    - /ghostty/
+    - /^gnome-terminal/
+    - /^guake$/
+    - /^hyper$/
+    - /^io\.elementary\.terminal$/
+    - /^kitty$/
+    - /^kgx$/
+    - /^konsole$/
+    - /^lxterminal$/
+    - /^mate-?terminal$/i
+    - /^org\.codeberg\.dnkl\.foot/
+    - /^org\.gnome\.(Console|Terminal)$/
+    - /^org\.kde\.(konsole|yakuake)$/
+    - /^org\.wezfurlong\.wezterm$/
+    - /ptyxis/i
+    - /^roxterm$/
+    - /^qterminal$/
+    - /^st$/
+    - /^sakura$/
+    - /^station$/
+    - /^tabby$/
+    - /^terminator$/
+    - /^terminology$/
+    - /^termite$/
+    - /^termius$/i
+    - /^tilda$/
+    - /^tilix$/
+    - /^urxvt$/
+    - /^wave$/i
+    - /^wezterm/
+    - /^xfce4-terminal$/
+    - /^xterm$/
+    - /^yakuake$/
+
+  firefox_browsers: &firefox_browsers
+    - /^firedragon$/
+    - /^firefox/i
+    - /^firefoxdeveloperedition$/
+    - /^floorp$/
+    - /^librewolf$/i
+    - /^mullvad browser$/i
+    - /^navigator$/i
+    - /^org\.mozilla\.firefox$/
+    - /^waterfox$/i
+    - /^zen/i
+
+  chrome_browsers: &chrome_browsers
+    - /^brave-browser$/i
+    - /^chromium/i
+    - /^falkon$/i
+    - /^google-chrome$/i
+    - /ungoogled.chromium/i
+    - /^microsoft-edge/i
+    - /^org\.deepin\.browser$/
+    - /^org\.kde\.falkon$/
+    - /^vivaldi/i
+
+  # all_browsers must duplicate entries (YAML can't merge anchors)
+  all_browsers: &all_browsers
+    - /^firedragon$/
+    - /^firefox/i
+    - /^firefoxdeveloperedition$/
+    - /^floorp$/
+    - /^librewolf$/i
+    - /^mullvad browser$/i
+    - /^navigator$/i
+    - /^org\.mozilla\.firefox$/
+    - /^waterfox$/i
+    - /^zen/i
+    - /^brave-browser$/i
+    - /^chromium/i
+    - /^falkon$/i
+    - /^google-chrome$/i
+    - /ungoogled.chromium/i
+    - /^microsoft-edge/i
+    - /^org\.deepin\.browser$/
+    - /^org\.kde\.falkon$/
+    - /^vivaldi/i
+    - /^discord$/i
+    - /^epiphany$/i
+    - /^org\.gnome\.epiphany$/i
+
+  file_managers: &file_managers
+    - /^caja$/
+    - /^com\.system76\.cosmicfiles$/i
+    - /^dde-file-manager$/
+    - /^dolphin$/
+    - /^io\.elementary\.files$/
+    - /^krusader$/
+    - /^nautilus$/
+    - /^nemo$/
+    - /^org\.gnome\.nautilus$/
+    - /^org\.kde\.(dolphin|krusader)$/
+    - /^pcmanfm(-qt)?$/
+    - /^peony-qt$/
+    - /^spacefm$/i
+    - /^thunar$/
+
+  nautilus: &nautilus
+    - /^nautilus$/
+    - /^org\.gnome\.nautilus$/
+
+  vscode: &vscode
+    - /^code(-oss| - oss)?$/i
+    - /^cursor$/
+    - /^vscodium$/
+
+  sublime: &sublime
+    - /^subl(ime_text)?$/
+
+  jetbrains: &jetbrains
+    - /^jetbrains-(?!.*toolbox)/
+
+  remotes: &remotes
+    - /^anydesk$/i
+    - /^gnome-(boxes|connections)$/i
+    - /^org\.gnome\.boxes$/i
+    - /^org\.remmina\.remmina$/i
+    - /^nxplayer/i
+    - /^remmina$/i
+    - /^qemu/i
+    - /^spicy$/i
+    - /^virt-manager$/i
+    - /^virtualbox/i
+    - /^xfreerdp$/i
+    - /^wfica$/i
+
+# ---------------------------------------------------------------------------
+# Layer 1: Modmap — Alt↔Super swap
+# ---------------------------------------------------------------------------
+modmap:
+  - name: Alt-Super swap (Cmd/Option)
+    remap:
+      Alt_L: Super_L
+      Alt_R: Super_R
+      Super_L: Alt_L
+      Super_R: Alt_R
+
+# ---------------------------------------------------------------------------
+# Layer 2: Keymap — combo translation (first-match-wins per combo)
+# ---------------------------------------------------------------------------
+keymap:
+  # =========================================================================
+  # 1. Terminal per-app overrides
+  # =========================================================================
+  - name: Ghostty overrides
+    application:
+      only:
+        - /ghostty/
+    remap:
+      # Ghostty uses Ctrl+Shift+L for clear, not Ctrl+L
+      Super-k: Ctrl-Shift-l
+
+  # =========================================================================
+  # 2. General Terminals
+  # =========================================================================
+  - name: General Terminals
+    application:
+      only: *terminals
+    remap:
+      # Copy/Paste/Find — Cmd → Ctrl+Shift (preserve Ctrl+C as SIGINT)
+      Super-c: Ctrl-Shift-c
+      Super-v: Ctrl-Shift-v
+      Super-f: Ctrl-Shift-f
+
+      # Tab/Window management — Cmd → Ctrl+Shift
+      Super-t: Ctrl-Shift-t
+      Super-n: Ctrl-Shift-n
+      Super-w: Ctrl-Shift-w
+      Super-d: Ctrl-Shift-d
+
+      # Clear screen (default terminals)
+      Super-k: Ctrl-l
+
+      # Font size
+      Super-Minus: Ctrl-Minus
+      Super-Equal: Ctrl-Shift-Equal
+
+      # Cmd+. → SIGINT (cancel)
+      Super-Dot: Ctrl-c
+
+      # Tab navigation (Ctrl+Tab not natively supported in most terminals)
+      Ctrl-Tab: Ctrl-Page_Down
+
+      # Delete operations — readline style
+      Alt-Backspace: Ctrl-w          # Option+Backspace → delete word left
+      Alt-Delete: [Escape, d]        # Option+Delete → delete word right
+      Super-Backspace: Ctrl-u        # Cmd+Backspace → delete line left
+      Super-Delete: Ctrl-k           # Cmd+Delete → delete line right
+
+  # =========================================================================
+  # 3. Firefox overrides
+  # =========================================================================
+  - name: Firefox overrides
+    application:
+      only: *firefox_browsers
+    remap:
+      # Private window: Cmd+Shift+N → Ctrl+Shift+P (Firefox uses P, not N)
+      Shift-Super-n: Ctrl-Shift-p
+
+      # Tab numbers: Cmd+1-9 → Alt+1-9 (Firefox uses Alt for tab numbers)
+      Super-1: Alt-1
+      Super-2: Alt-2
+      Super-3: Alt-3
+      Super-4: Alt-4
+      Super-5: Alt-5
+      Super-6: Alt-6
+      Super-7: Alt-7
+      Super-8: Alt-8
+      Super-9: Alt-9
+
+  # =========================================================================
+  # 4. Chrome overrides
+  # =========================================================================
+  - name: Chrome overrides
+    application:
+      only: *chrome_browsers
+    remap:
+      # History: Cmd+Y → Ctrl+H
+      Super-y: Ctrl-h
+      # Downloads: Cmd+Shift+J → Ctrl+J
+      Shift-Super-j: Ctrl-j
+
+  # =========================================================================
+  # 5. General Browsers
+  # =========================================================================
+  - name: General Browsers
+    application:
+      only: *all_browsers
+    remap:
+      # Dev tools
+      Alt-Super-i: Ctrl-Shift-i      # Cmd+Option+I → Dev Tools
+      Alt-Super-j: Ctrl-Shift-j      # Cmd+Option+J → Console
+      Alt-Super-u: Ctrl-u            # Cmd+Option+U → View Source
+
+      # Navigation
+      Super-Left_Brace: Alt-Left     # Cmd+[ → Back
+      Super-Right_Brace: Alt-Right   # Cmd+] → Forward
+
+      # Tab navigation
+      Super-Alt-Left: Ctrl-Page_Up   # Cmd+Option+Left → Previous Tab
+      Super-Alt-Right: Ctrl-Page_Down # Cmd+Option+Right → Next Tab
+
+  # =========================================================================
+  # 6. Nautilus overrides
+  # =========================================================================
+  - name: Nautilus overrides
+    application:
+      only: *nautilus
+    remap:
+      # Nautilus swaps icon/list numbering vs macOS convention
+      Super-1: Ctrl-2                # Cmd+1 → Icons (Nautilus Ctrl+2)
+      Super-2: Ctrl-1                # Cmd+2 → List (Nautilus Ctrl+1)
+
+      # Open in new tab (Nautilus uses Ctrl+Enter, not Ctrl+Shift+O)
+      Alt-Super-o: Ctrl-Enter
+
+      # Preferences (Nautilus supports Ctrl+,)
+      Super-comma: Ctrl-comma
+
+  # =========================================================================
+  # 7. General File Managers
+  # =========================================================================
+  - name: General File Managers
+    application:
+      only: *file_managers
+    remap:
+      # Rename (simplified from Toshy's stateful iEF2)
+      Enter: F2
+
+      # Properties
+      Super-i: Alt-Enter
+
+      # Trash
+      Super-Backspace: Delete
+
+      # Toggle hidden files
+      Shift-Super-Dot: Ctrl-h
+
+      # Navigation
+      Super-Up: Alt-Up               # Cmd+Up → Parent directory
+      Super-Down: Enter              # Cmd+Down → Open folder/file
+
+      # Back/Forward
+      Super-Left_Brace: Alt-Left
+      Super-Right_Brace: Alt-Right
+
+      # Tab navigation
+      Shift-Super-Left_Brace: Ctrl-Page_Up
+      Shift-Super-Right_Brace: Ctrl-Page_Down
+
+      # New Folder
+      Shift-Super-n: Ctrl-Shift-n
+
+      # Preferences (most file managers use Alt+E,N sequence)
+      Super-comma: [Alt-e, n]
+
+      # Open in new window/tab
+      Alt-Super-o: Ctrl-Shift-o
+
+  # =========================================================================
+  # 8. VS Code
+  # =========================================================================
+  - name: VS Code
+    application:
+      only: *vscode
+    remap:
+      # Terminal toggle (physical Ctrl+` → Ctrl+`)
+      Alt-Grave: Ctrl-Grave
+      Shift-Alt-Grave: Ctrl-Shift-Grave
+
+      # QuickFix (overrides global Cmd+. → Escape)
+      Super-Dot: Ctrl-Dot
+
+      # Copy via Ctrl+Insert (works in embedded terminal too)
+      Super-c: Ctrl-Insert
+
+      # Find option toggles
+      Alt-Super-c: Alt-c             # Toggle Match Case
+      Alt-Super-w: Alt-w             # Toggle Whole Word
+      Alt-Super-r: Alt-r             # Toggle Regex
+      Alt-Super-l: Alt-l             # Toggle Find in Selection
+
+      # Replace
+      Alt-Super-f: Ctrl-h            # Cmd+Option+F → Replace
+      Super-Enter: Ctrl-Alt-Enter    # Cmd+Enter → Replace All
+
+      # Word wrap toggle
+      Alt-Super-z: Alt-z
+
+      # Multi-cursor
+      Alt-Super-Up: Shift-Alt-Up     # Cmd+Option+Up → Add Cursor Above
+      Alt-Super-Down: Shift-Alt-Down # Cmd+Option+Down → Add Cursor Below
+
+      # Tab navigation
+      Shift-Super-Left_Brace: Ctrl-Page_Up
+      Shift-Super-Right_Brace: Ctrl-Page_Down
+
+      # Go to Line
+      Super-g: Ctrl-g
+
+      # Source Control
+      Shift-Alt-g: Shift-Ctrl-g
+
+      # Delete operations
+      Super-Backspace: [Shift-Home, Delete]
+      Super-Delete: [Shift-End, Delete]
+
+  # =========================================================================
+  # 9. JetBrains IDEs
+  # =========================================================================
+  - name: JetBrains IDEs
+    application:
+      only: *jetbrains
+    remap:
+      # Tool windows: Cmd+0-9 → Alt+0-9
+      Super-0: Alt-0
+      Super-1: Alt-1
+      Super-2: Alt-2
+      Super-3: Alt-3
+      Super-4: Alt-4
+      Super-5: Alt-5
+      Super-6: Alt-6
+      Super-7: Alt-7
+      Super-8: Alt-8
+      Super-9: Alt-9
+
+      # Settings
+      Super-comma: Ctrl-Alt-s        # Cmd+, → Settings
+      Super-semicolon: Ctrl-Alt-Shift-s  # Cmd+; → Project Structure
+
+      # Go to
+      Super-o: Ctrl-n                # Cmd+O → Go to Class
+      Shift-Super-o: Ctrl-Shift-n    # Cmd+Shift+O → Go to File
+      Alt-Super-o: Ctrl-Alt-Shift-n  # Cmd+Option+O → Go to Symbol
+      Super-l: Ctrl-g                # Cmd+L → Go to Line
+      Super-b: Ctrl-b                # Cmd+B → Go to Declaration
+      Super-e: Ctrl-e                # Cmd+E → Recent Files
+
+      # Run/Debug
+      Super-r: Shift-F10             # Cmd+R → Run
+      Super-d: Shift-F9              # Cmd+D → Debug
+      Shift-Super-r: Ctrl-Shift-F10  # Cmd+Shift+R → Run Context Config
+      Alt-Super-r: F9                # Cmd+Option+R → Resume
+
+      # Find
+      Super-g: F3                    # Cmd+G → Find Next
+
+      # Refactor
+      Super-t: Ctrl-Alt-Shift-t      # Cmd+T → Refactor This
+
+      # Selection
+      Alt-Up: Ctrl-w                 # Option+Up → Extend Selection
+      Alt-Down: Ctrl-Shift-w         # Option+Down → Shrink Selection
+
+      # Delete
+      Alt-Delete: Ctrl-Delete        # Option+Delete → Delete to Word End
+      Alt-Backspace: Ctrl-Backspace  # Option+Backspace → Delete to Word Start
+      Super-Backspace: Ctrl-y        # Cmd+Backspace → Delete Line
+
+  # =========================================================================
+  # 10. Sublime Text
+  # =========================================================================
+  - name: Sublime Text
+    application:
+      only: *sublime
+    remap:
+      # Full screen
+      Super-Alt-f: F11
+
+      # Find
+      Super-g: F3                    # Cmd+G → Find Next
+      Shift-Super-g: Shift-F3        # Cmd+Shift+G → Find Previous
+      Ctrl-Alt-g: Alt-F3             # Ctrl+Option+G → Find All Under
+      Alt-Super-f: Ctrl-h            # Cmd+Option+F → Replace
+
+      # Multi-cursor
+      Shift-Super-Up: Alt-Shift-Up
+      Shift-Super-Down: Alt-Shift-Down
+
+      # Scroll
+      Alt-Super-Up: Ctrl-Up
+      Alt-Super-Down: Ctrl-Down
+
+      # Layouts: Cmd+Option+1-4 → Alt+Shift+1-4
+      Alt-Super-1: Alt-Shift-1
+      Alt-Super-2: Alt-Shift-2
+      Alt-Super-3: Alt-Shift-3
+      Alt-Super-4: Alt-Shift-4
+
+      # Switch file
+      Ctrl-Alt-Up: Alt-o
+
+      # Paste from history
+      Alt-Super-v: [Ctrl-k, Ctrl-v]
+
+  # =========================================================================
+  # 11. Misc app overrides
+  # =========================================================================
+  - name: Thunderbird
+    application:
+      only:
+        - /^thunderbird/i
+        - /^org\.mozilla\.thunderbird$/
+    remap:
+      # Tab navigation
+      Shift-Super-Left_Brace: Ctrl-Page_Up
+      Shift-Super-Right_Brace: Ctrl-Page_Down
+
+  - name: Zotero
+    application:
+      only:
+        - /zotero/i
+    remap:
+      # Import from clipboard
+      Alt-Super-v: Ctrl-Alt-Shift-i
+
+  # =========================================================================
+  # 12. Cmd+Dot → Escape (non-terminal, non-VS Code apps)
+  # =========================================================================
+  - name: Cmd+Dot to Escape
+    application:
+      not:
+        # Exclude terminals (handled above as Ctrl+C)
+        - /^alacritty$/
+        - /^com\.raggesilver\.blackbox$/
+        - /^com\.system76\.cosmicterm$/
+        - /^contour$/
+        - /^cutefish-terminal$/
+        - /^deepin-terminal$/
+        - /^dev\.warp\.warp$/
+        - /^eterm$/
+        - /ghostty/
+        - /^gnome-terminal/
+        - /^guake$/
+        - /^hyper$/
+        - /^io\.elementary\.terminal$/
+        - /^kitty$/
+        - /^kgx$/
+        - /^konsole$/
+        - /^lxterminal$/
+        - /^mate-?terminal$/i
+        - /^org\.codeberg\.dnkl\.foot/
+        - /^org\.gnome\.(Console|Terminal)$/
+        - /^org\.kde\.(konsole|yakuake)$/
+        - /^org\.wezfurlong\.wezterm$/
+        - /ptyxis/i
+        - /^roxterm$/
+        - /^qterminal$/
+        - /^st$/
+        - /^sakura$/
+        - /^station$/
+        - /^tabby$/
+        - /^terminator$/
+        - /^terminology$/
+        - /^termite$/
+        - /^termius$/i
+        - /^tilda$/
+        - /^tilix$/
+        - /^urxvt$/
+        - /^wave$/i
+        - /^wezterm/
+        - /^xfce4-terminal$/
+        - /^xterm$/
+        - /^yakuake$/
+        # Exclude VS Code (handled above as Ctrl+.)
+        - /^code(-oss| - oss)?$/i
+        - /^cursor$/
+        - /^vscodium$/
+    remap:
+      Super-Dot: Escape
+
+  # =========================================================================
+  # 13. General GUI (catch-all, excludes remote desktop apps)
+  # =========================================================================
+  - name: General GUI
+    application:
+      not: *remotes
+    remap:
+      # --- Standard shortcuts (Cmd → Ctrl) ---
+      Super-c: Ctrl-c
+      Super-v: Ctrl-v
+      Super-x: Ctrl-x
+      Super-z: Ctrl-z                # Shift variant (redo) auto-propagates
+      Super-a: Ctrl-a
+      Super-s: Ctrl-s                # Shift variant (save as) auto-propagates
+      Super-w: Ctrl-w
+      Super-q: Alt-F4               # Cmd+Q → Quit
+      Super-t: Ctrl-t
+      Super-n: Ctrl-n
+      Super-f: Ctrl-f
+      Super-g: Ctrl-g                # Shift variant (find prev) auto-propagates
+      Super-p: Ctrl-p
+      Super-o: Ctrl-o
+      Super-r: Ctrl-r
+      Super-l: Ctrl-l
+      Super-comma: Ctrl-comma        # Preferences
+
+      # --- Navigation (Cmd+Arrow → Home/End/Ctrl+Home/Ctrl+End) ---
+      Super-Left: Home               # Shift variant (select) auto-propagates
+      Super-Right: End
+      Super-Up: Ctrl-Home
+      Super-Down: Ctrl-End
+
+      # --- Word navigation (Option+Arrow → Ctrl+Arrow) ---
+      Alt-Left: Ctrl-Left            # Shift variant (select word) auto-propagates
+      Alt-Right: Ctrl-Right
+
+      # --- Delete operations ---
+      Alt-Backspace: Ctrl-Backspace   # Option+Backspace → Delete Word Left
+      Alt-Delete: Ctrl-Delete         # Option+Delete → Delete Word Right
+      Super-Backspace: Ctrl-Shift-Backspace  # Cmd+Backspace → Delete Line Left
+      Super-Delete: [Shift-End, Delete]      # Cmd+Delete → Delete Line Right
+
+      # --- Tab navigation ---
+      Shift-Super-Left_Brace: Ctrl-Page_Up    # Cmd+Shift+[ → Previous Tab
+      Shift-Super-Right_Brace: Ctrl-Page_Down # Cmd+Shift+] → Next Tab
